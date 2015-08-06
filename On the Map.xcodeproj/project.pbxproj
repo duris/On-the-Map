@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		0DD75C5E1B71387900E309C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C5D1B71387900E309C2 /* AppDelegate.swift */; };
-		0DD75C601B71387900E309C2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C5F1B71387900E309C2 /* ViewController.swift */; };
+		0DD75C601B71387900E309C2 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C5F1B71387900E309C2 /* LoginViewController.swift */; };
 		0DD75C631B71387900E309C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0DD75C611B71387900E309C2 /* Main.storyboard */; };
 		0DD75C651B71387900E309C2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0DD75C641B71387900E309C2 /* Images.xcassets */; };
 		0DD75C681B71387900E309C2 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DD75C661B71387900E309C2 /* LaunchScreen.xib */; };
 		0DD75C741B71387900E309C2 /* On_the_MapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C731B71387900E309C2 /* On_the_MapTests.swift */; };
+		0DD75C851B713C4000E309C2 /* UdacityClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C841B713C4000E309C2 /* UdacityClient.swift */; };
+		0DD75C871B713C5800E309C2 /* ParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C861B713C5800E309C2 /* ParseClient.swift */; };
+		0DD75CEB1B7404DA00E309C2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75CEA1B7404DA00E309C2 /* MapViewController.swift */; };
+		0DD75CED1B7412A100E309C2 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75CEC1B7412A100E309C2 /* ListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,13 +33,17 @@
 		0DD75C581B71387900E309C2 /* On the Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On the Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DD75C5C1B71387900E309C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DD75C5D1B71387900E309C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0DD75C5F1B71387900E309C2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0DD75C5F1B71387900E309C2 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = "On the Map/LoginViewController.swift"; sourceTree = "<group>"; };
 		0DD75C621B71387900E309C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0DD75C641B71387900E309C2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0DD75C671B71387900E309C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		0DD75C6D1B71387900E309C2 /* On the MapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "On the MapTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DD75C721B71387900E309C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0DD75C731B71387900E309C2 /* On_the_MapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = On_the_MapTests.swift; sourceTree = "<group>"; };
+		0DD75C841B713C4000E309C2 /* UdacityClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityClient.swift; sourceTree = "<group>"; };
+		0DD75C861B713C5800E309C2 /* ParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseClient.swift; sourceTree = "<group>"; };
+		0DD75CEA1B7404DA00E309C2 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		0DD75CEC1B7412A100E309C2 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,10 +86,9 @@
 			isa = PBXGroup;
 			children = (
 				0DD75C5D1B71387900E309C2 /* AppDelegate.swift */,
-				0DD75C5F1B71387900E309C2 /* ViewController.swift */,
-				0DD75C611B71387900E309C2 /* Main.storyboard */,
-				0DD75C641B71387900E309C2 /* Images.xcassets */,
-				0DD75C661B71387900E309C2 /* LaunchScreen.xib */,
+				0DD75C7D1B7138CB00E309C2 /* Model */,
+				0DD75C7E1B7138DF00E309C2 /* View */,
+				0DD75C7F1B7138E500E309C2 /* Controller */,
 				0DD75C5B1B71387900E309C2 /* Supporting Files */,
 			);
 			path = "On the Map";
@@ -90,6 +97,8 @@
 		0DD75C5B1B71387900E309C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0DD75C641B71387900E309C2 /* Images.xcassets */,
+				0DD75C801B713B6700E309C2 /* Storyboards */,
 				0DD75C5C1B71387900E309C2 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -110,6 +119,69 @@
 				0DD75C721B71387900E309C2 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0DD75C7D1B7138CB00E309C2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0DD75C811B713BE800E309C2 /* Clients */,
+			);
+			name = Model;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0DD75C7E1B7138DF00E309C2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0DD75C7F1B7138E500E309C2 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0DD75C5F1B71387900E309C2 /* LoginViewController.swift */,
+				0DD75CEA1B7404DA00E309C2 /* MapViewController.swift */,
+				0DD75CEC1B7412A100E309C2 /* ListViewController.swift */,
+			);
+			name = Controller;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0DD75C801B713B6700E309C2 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				0DD75C611B71387900E309C2 /* Main.storyboard */,
+				0DD75C661B71387900E309C2 /* LaunchScreen.xib */,
+			);
+			name = Storyboards;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0DD75C811B713BE800E309C2 /* Clients */ = {
+			isa = PBXGroup;
+			children = (
+				0DD75C831B713BF600E309C2 /* Udacity */,
+				0DD75C821B713BEF00E309C2 /* Parse */,
+			);
+			name = Clients;
+			sourceTree = "<group>";
+		};
+		0DD75C821B713BEF00E309C2 /* Parse */ = {
+			isa = PBXGroup;
+			children = (
+				0DD75C861B713C5800E309C2 /* ParseClient.swift */,
+			);
+			name = Parse;
+			sourceTree = "<group>";
+		};
+		0DD75C831B713BF600E309C2 /* Udacity */ = {
+			isa = PBXGroup;
+			children = (
+				0DD75C841B713C4000E309C2 /* UdacityClient.swift */,
+			);
+			name = Udacity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,8 +284,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0DD75C601B71387900E309C2 /* ViewController.swift in Sources */,
+				0DD75C601B71387900E309C2 /* LoginViewController.swift in Sources */,
+				0DD75CEB1B7404DA00E309C2 /* MapViewController.swift in Sources */,
+				0DD75CED1B7412A100E309C2 /* ListViewController.swift in Sources */,
 				0DD75C5E1B71387900E309C2 /* AppDelegate.swift in Sources */,
+				0DD75C871B713C5800E309C2 /* ParseClient.swift in Sources */,
+				0DD75C851B713C4000E309C2 /* UdacityClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +318,7 @@
 				0DD75C621B71387900E309C2 /* Base */,
 			);
 			name = Main.storyboard;
+			path = "On the Map";
 			sourceTree = "<group>";
 		};
 		0DD75C661B71387900E309C2 /* LaunchScreen.xib */ = {
@@ -250,6 +327,7 @@
 				0DD75C671B71387900E309C2 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			path = "On the Map";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
