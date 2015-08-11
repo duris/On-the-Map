@@ -13,11 +13,18 @@ class MapViewController: UIViewController {
     
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
+    var students = [ParseStudent]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /* Get students data */
+        ParseClient.sharedInstance().getStudentData() { (students, errorString) in
+            self.students = students
+            dispatch_async(dispatch_get_main_queue()) {
 
-
+            }
+        }
     }
     
     @IBAction func logout() {

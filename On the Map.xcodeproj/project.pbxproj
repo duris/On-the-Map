@@ -17,6 +17,7 @@
 		0DD75C871B713C5800E309C2 /* ParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75C861B713C5800E309C2 /* ParseClient.swift */; };
 		0DD75CEB1B7404DA00E309C2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75CEA1B7404DA00E309C2 /* MapViewController.swift */; };
 		0DD75CED1B7412A100E309C2 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75CEC1B7412A100E309C2 /* ListViewController.swift */; };
+		0DD75CEF1B7A8C9D00E309C2 /* ParseStudent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD75CEE1B7A8C9D00E309C2 /* ParseStudent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		0DD75C861B713C5800E309C2 /* ParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseClient.swift; sourceTree = "<group>"; };
 		0DD75CEA1B7404DA00E309C2 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0DD75CEC1B7412A100E309C2 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		0DD75CEE1B7A8C9D00E309C2 /* ParseStudent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseStudent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				0DD75C861B713C5800E309C2 /* ParseClient.swift */,
+				0DD75CEE1B7A8C9D00E309C2 /* ParseStudent.swift */,
 			);
 			name = Parse;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				0DD75C601B71387900E309C2 /* LoginViewController.swift in Sources */,
 				0DD75CEB1B7404DA00E309C2 /* MapViewController.swift in Sources */,
 				0DD75CED1B7412A100E309C2 /* ListViewController.swift in Sources */,
+				0DD75CEF1B7A8C9D00E309C2 /* ParseStudent.swift in Sources */,
 				0DD75C5E1B71387900E309C2 /* AppDelegate.swift in Sources */,
 				0DD75C871B713C5800E309C2 /* ParseClient.swift in Sources */,
 				0DD75C851B713C4000E309C2 /* UdacityClient.swift in Sources */,

@@ -46,7 +46,6 @@ class UdacityClient : NSObject {
                 
                 /* Subset response data */
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5 ))
-                println(NSString(data: newData, encoding: NSUTF8StringEncoding))
                 
                 /* Parse the data */
                 var parsingError: NSError? = nil
@@ -54,7 +53,6 @@ class UdacityClient : NSObject {
                 
                 /* Use the data! */
                 if let status = parsedResult["status"] as? Int {
-                    
                     if status == 400 {
                         dispatch_async(dispatch_get_main_queue()) {
                             completionHandler(success: false, sessionID: nil, errorString: "Username or password is empty.")
@@ -66,8 +64,14 @@ class UdacityClient : NSObject {
                     }
                 } else {
                     if let account = parsedResult["account"] as? [String:AnyObject] {
-                        if let account = account["registered"] as? Bool {
-                            if account {
+                        if let registered = account["registered"] as? Bool {
+                            if registered {
+                                if let userID = account["key"] as? String {
+                                    println("The user ID is \(userID)")
+                                    self.getUserData(userID) { (fullName, errorString) in
+                                        println("The user is \(fullName!)")
+                                    }
+                                }
                                 if let session = parsedResult["session"] as? NSDictionary {
                                     if let sessionID = session["id"] as? String {
                                         completionHandler(success: true, sessionID: sessionID, errorString: nil)
@@ -99,19 +103,21 @@ class UdacityClient : NSObject {
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
         request.HTTPMethod = "DELETE"
         
+        /* Shared cookie storage */
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         
+        /* Check cookie name for current state */
         for cookie in sharedCookieStorage.cookies as! [NSHTTPCookie] {
             if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
         }
         
+        /* Update the cookie name */
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value!, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
-    
-        let session = NSURLSession.sharedSession()
-    
+        
+        /* Make the request */
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
                 // Handle error…
@@ -124,6 +130,43 @@ class UdacityClient : NSObject {
         }
         /* Start the request */
         task.resume()
+    }
+    
+    func getUserData(userID:String, completionHandler: (fullName: String?, errorString: String?) -> Void) {
+        
+        /* Configure the request */
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(userID)")!)
+
+        /* Make the request */
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil { // Handle error...
+                return
+            }
+            
+            /* Subset response data */
+            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
+            
+            /* Parse the data */
+            var parsingError: NSError? = nil
+            let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+            
+            /* Use the data */
+            if let user = parsedResult["user"] as? NSDictionary {
+                completionHandler(fullName: self.getFullName(user), errorString: nil)
+            }
+            
+        }
+        task.resume()
+    }
+    
+    func getFullName(user: NSDictionary) -> String {
+        var name: String!
+        if let lastName = user["last_name"] as? String {
+            if let firstName = user["first_name"] as? String {
+                name = firstName + " " + lastName
+            }
+        }
+        return name
     }
 
     /* Shared Instance */
