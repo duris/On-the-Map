@@ -1,20 +1,23 @@
 //
-//  ParseStudent.swift
+//  StudentInformation.swift
 //  On the Map
 //
-//  Created by Ross Duris on 8/11/15.
+//  Created by Ross Duris on 8/12/15.
 //  Copyright (c) 2015 duris.io. All rights reserved.
 //
 
-struct ParseStudent {
+
+struct StudentInformation {
     
     var firstName = ""
     var lastName = ""
     var latitude = 0.00
     var longitude = 0.00
     var mediaURL = ""
+
+
     
-    /* Construct a ParseStudent from a dictionary */
+    /* Construct a StudentInformation object from a dictionary */
     init(dictionary: [String : AnyObject]) {
         
         firstName = dictionary["firstName"] as! String
@@ -24,12 +27,12 @@ struct ParseStudent {
         mediaURL = dictionary["mediaURL"] as! String
     }
     
-    /* Helper: Given an array of dictionaries, convert them to an array of ParseStudent objects */
-    static func studentsFromResults(results: [[String : AnyObject]]) -> [ParseStudent] {
-        var students = [ParseStudent]()
+    /* Helper: Given an array of dictionaries, convert them to an array of StudentInformation objects */
+    static func studentsFromResults(results: [[String : AnyObject]]) -> [StudentInformation] {
+        var students = [StudentInformation]()
         
         for result in results {
-            students.append(ParseStudent(dictionary: result))
+            students.append(StudentInformation(dictionary: result))
         }
         
         return students

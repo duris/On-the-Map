@@ -11,7 +11,7 @@ import UIKit
 class ListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var studentTableView: UITableView!
-    var students = [ParseStudent]()
+    var students = [StudentInformation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +31,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
+        println(students.count)
         return students.count
     }
     
@@ -49,17 +50,16 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         /* Get the students media URL */
         let url = students[indexPath.row].mediaURL
-        
-        if url != "" {
-             /* Open students media URL in Safari */
-             UIApplication.sharedApplication().openURL(NSURL(string: url)!)
-        }
+        handleURL(url)
+    }
+    
+    func handleURL(url: String) {
+                UIApplication.sharedApplication().openURL(NSURL(string: url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!)
     }
 
     @IBAction func logout() {
         /* Logout the user and present the login view */
         UdacityClient.sharedInstance().logout(self)
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController") as! UIViewController
-        self.presentViewController(controller, animated: true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }

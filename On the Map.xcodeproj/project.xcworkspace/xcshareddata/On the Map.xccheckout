@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>94BC1484-8075-44A9-BBF0-205B061A08E0</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>On the Map</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>292DDF1AF7B1105AB1C6213818FDFF4141E2E8E6</key>
 		<string>github_abc:duris/On-the-Map.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>On the Map.xcodeproj/project.xcworkspace</string>
+	<string>On the Map.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>292DDF1AF7B1105AB1C6213818FDFF4141E2E8E6</key>

@@ -13,7 +13,7 @@ class ParseClient : NSObject {
     let applicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     let restAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     
-    func getStudentData(completionHandler: (students: [ParseStudent], errorString: String?) -> Void) {
+    func getStudentData(completionHandler: (students: [StudentInformation], errorString: String?) -> Void) {
         
         /* Create the request */
         let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
@@ -35,7 +35,7 @@ class ParseClient : NSObject {
             if let results = parsedResult["results"] as? [[String : AnyObject]] {
                 
                 /* Set the results in the completion handler */
-                completionHandler(students: ParseStudent.studentsFromResults(results), errorString: nil)
+                completionHandler(students: StudentInformation.studentsFromResults(results), errorString: nil)
             } else {
                 println("Could not find results in \(parsedResult)")
             }

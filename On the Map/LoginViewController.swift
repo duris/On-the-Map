@@ -39,7 +39,7 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction func loginButtonTouch() {        
-        UdacityClient.sharedInstance().authenticateWithCredentials(usernameTextField.text, password: passwordTextField.text, hostViewController: self) { (success, sessionID, errorString) in
+        UdacityClient.sharedInstance().authenticateWithCredentials(usernameTextField.text, password: passwordTextField.text, hostViewController: self) { (success, errorString) in
             
             if success {
                 self.completeLogin()
