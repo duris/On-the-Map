@@ -10,16 +10,26 @@ import MapKit
 
 class StudentPin: NSObject, MKAnnotation {
     
+    /* StudentPin properties */
     let title: String
+    let subtitle: String
     let coordinate: CLLocationCoordinate2D
-    let mediaURL: String
     
-    init(title: String, coordinate: CLLocationCoordinate2D, mediaURL: String) {
+    init(title: String, subtitle: String, coordinate: CLLocationCoordinate2D) {
         self.title = title
+        self.subtitle = subtitle
         self.coordinate = coordinate
-        self.mediaURL = mediaURL
         
         super.init()
+    }
+    
+    /* Create a student pin from a StudentInformation object */
+    static func createPin(student:StudentInformation) -> StudentPin {
+        let title = "\(student.firstName) \(student.lastName)"
+        let coordinate = CLLocationCoordinate2DMake(student.latitude, student.longitude)
+        let subtitle = student.mediaURL
+        let studentPin = StudentPin(title: title, subtitle: subtitle, coordinate: coordinate)
+        return studentPin
     }
     
 }

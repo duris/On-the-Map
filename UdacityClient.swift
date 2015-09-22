@@ -14,155 +14,144 @@ class UdacityClient : NSObject {
     /* Shared session */
     var session: NSURLSession
     
-    /* Parsing Error */
-    var parsingError: String!
+    /* Udacity User */
+    struct User {
+        static var uniqueKey = ""
+        static var firstName = ""
+        static var lastName = ""
+        
+    }
     
-    /* Authentication state */
-    var sessionID : String? = nil
-    
+    /* Initialize the session */
     override init() {
         session = NSURLSession.sharedSession()
         super.init()
     }
     
-    /* Authenticate with Udacity */
+    
+    
+    
+    /*
+    /
+    / Authenticate with Udacity using the entered username and password
+    /
+    */
     func authenticateWithCredentials(username:String, password:String, hostViewController: UIViewController, completionHandler: (success: Bool, errorString: String?) -> Void) {
         
-        /* Configure the request */        
-        /* Note: Without www in the url the request returns registered as false */
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
-        
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         
-        /* Make the request */
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil  {
-                //Handle error
+                completionHandler(success: false, errorString: "\(error.localizedDescription)")
                 return
             } else {
-                
-                /* Subset response data */
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5 ))
-                
-                /* Parse the data */
+                println(NSString(data: newData, encoding: NSUTF8StringEncoding))
                 var parsingError: NSError? = nil
                 let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
                 
-                /* Use the data! */
-                if let status = parsedResult["status"] as? Int {
-                    if status == 400 {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            completionHandler(success: false, errorString: "Username or password is empty.")
-                        }
-                    } else if status == 403 {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            completionHandler(success: false, errorString: "Account not found or invalid credentials.")
-                        }
-                    }
-                } else {
-                    if let account = parsedResult["account"] as? [String:AnyObject] {
-                        if let registered = account["registered"] as? Bool {
-                            if registered {
+                if let account = parsedResult["account"] as? [String:AnyObject],
+                    let registered = account["registered"] as? Bool,
+                    let key = account["key"] as? String {
+                        User.uniqueKey = key as String
+                        self.getUserData(key) { (success, errorString) in
+                            if success {
                                 completionHandler(success: true, errorString:nil)
                             } else {
-                                println("Account not registered.")
+                                completionHandler(success: false, errorString: errorString)
                             }
-                        } else {
-                            println("Could not find registered in \(account)")
                         }
-                    } else {
-                        println("Could not find account in \(parsedResult)")
+                } else if let status = parsedResult["status"] as? Int {
+                    if status == 400 {
+                            completionHandler(success: false, errorString: "Username or password is empty.")
+                    } else if status == 403 {
+                            completionHandler(success: false, errorString: "Account not found or invalid credentials.")
                     }
+                } else {
+                    completionHandler(success: false, errorString:"Could not complete login. There was an error with the server.")
                 }
             }
         }
-        /* Start the request */
         task.resume()
     }
     
+    
+
+    
+    /*
+    /
+    / Send a HTTP Delete request to the server and end the current session
+    /
+    */
     func logout(hostViewController: UIViewController) {
-        
-        /* Configure the request */
+    
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
         request.HTTPMethod = "DELETE"
-        
-        /* Shared cookie storage */
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        
-        /* Check cookie name for current state */
         for cookie in sharedCookieStorage.cookies as! [NSHTTPCookie] {
             if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
         }
-        
-        /* Update the cookie name */
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value!, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
-        
-        /* Make the request */
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
                 // Handle error…
                 return
             } else {
-                /* Subset response data */
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 println(NSString(data: newData, encoding: NSUTF8StringEncoding))
             }
         }
-        /* Start the request */
         task.resume()
     }
     
-//    func getUserData(userID:String, completionHandler: (fullName: String?, errorString: String?) -> Void) {
-//        
-//        /* Configure the request */
-//        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(userID)")!)
-//
-//        /* Make the request */
-//        let task = session.dataTaskWithRequest(request) { data, response, error in
-//            if error != nil { // Handle error...
-//                return
-//            }
-//            
-//            /* Subset response data */
-//            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
-//            
-//            /* Parse the data */
-//            var parsingError: NSError? = nil
-//            let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
-//            
-//            /* Use the data */
-//            if let user = parsedResult["user"] as? NSDictionary {
-//                completionHandler(fullName: self.getFullName(user), errorString: nil)
-//            }
-//            
-//        }
-//        task.resume()
-//    }
-//    
-//    func getFullName(user: NSDictionary) -> String {
-//        var name: String!
-//        if let lastName = user["last_name"] as? String {
-//            if let firstName = user["first_name"] as? String {
-//                name = firstName + " " + lastName
-//            }
-//        }
-//        return name
-//    }
+    
+    
+    /*
+    /
+    / Get user data from Udactiy and store it in the User struct
+    /
+    */
+    func getUserData(key:String, completionHandler: (success: Bool, errorString: String?) -> Void) {
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(key)")!)
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                completionHandler(success: false, errorString: "\(error.localizedDescription)")
+                return
+            }
+            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            var parsingError: NSError? = nil
+            let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+        
+            if let user = parsedResult["user"] as? NSDictionary {
+                if let firstName = user["first_name"] as? String,
+                    let lastName = user["last_name"] as? String {
+                        User.firstName = firstName
+                        User.lastName = lastName
+                        completionHandler(success: true, errorString: nil)
+                    }
+                else {
+                        completionHandler(success: false, errorString: "Could not complete login. There was an error with the server.")
+                }
+            }
+        }
+        task.resume()
+    }
+    
+
 
     /* Shared Instance */
     class func sharedInstance() -> UdacityClient {
-        
         struct Singleton {
             static var sharedInstance = UdacityClient()
         }
-        
         return Singleton.sharedInstance
     }
-
 }

@@ -8,24 +8,27 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: SharedViewController {
     
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet weak var debugTextLabel: UILabel!
     @IBOutlet weak var headerTextLabel: UILabel!
-    
-    var tapRecognizer: UITapGestureRecognizer? = nil
+    @IBOutlet weak var loginActivityIdicator: UIActivityIndicatorView!
+    let animation = CABasicAnimation(keyPath: "position")
     
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
+                
+        // Configure Activity Indicator 
+        loginActivityIdicator.hidden = true
         
-        /* Configure User Interface */
-        self.configureUI()
+        // Configure User Interface
+        self.configureLoginUI()
+        
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -38,33 +41,28 @@ class LoginViewController: UIViewController {
         unsubscribeToKeyboardNotifications()
     }
 
-    @IBAction func loginButtonTouch() {        
+    @IBAction func loginButtonTouch() {
+        //Start loading
+        toggleLoading(true, indicator: loginActivityIdicator, view: view)
         UdacityClient.sharedInstance().authenticateWithCredentials(usernameTextField.text, password: passwordTextField.text, hostViewController: self) { (success, errorString) in
-            
             if success {
                 self.completeLogin()
             } else {
-                self.displayError(errorString)
+                self.alertError(errorString!, viewController: self)
             }
+            //Stop loading
+            self.toggleLoading(false, indicator: self.loginActivityIdicator, view: self.view)
         }
     }
     
     func completeLogin() {
-        dispatch_async(dispatch_get_main_queue(), {
-            self.debugTextLabel.text = ""            
+        //Open the TabBarController
+        dispatch_async(dispatch_get_main_queue()) {
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController") as! UITabBarController
             self.presentViewController(controller, animated: true, completion: nil)
-        })
+        }
     }
-    
-    func displayError(errorString: String?) {
-        dispatch_async(dispatch_get_main_queue(), {
-            if let errorString = errorString {
-                self.debugTextLabel.text = errorString
-            }
-        })
-    }
-    
+
     func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
@@ -89,71 +87,66 @@ class LoginViewController: UIViewController {
         }
     }
     
+    
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
         return keyboardSize.CGRectValue().height
     }
-    
-    func addKeyboardDismissRecognizer() {
-        view.addGestureRecognizer(tapRecognizer!)
-    }
-    
-    func removeKeyboardDismissRecognizer() {
-        view.removeGestureRecognizer(tapRecognizer!)
-    }
-    
-    func handleSingleTap(recognizer: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+
+    @IBAction func signUp(){
+        //Open Udactiy sign up page
+        let url = NSURL(string: "https://www.udacity.com/account/auth#!/signup")
+        UIApplication.sharedApplication().openURL(url!)
     }
 
-    
-    func configureUI() {
+    //User interface concepts from Udacity ios-networking course
+    func configureLoginUI() {
         
-        /* Configure background gradient */
+        // Configure background gradient
         self.view.backgroundColor = UIColor.clearColor()
-        let colorTop = UIColor(red: 0.345, green: 0.839, blue: 0.988, alpha: 1.0).CGColor
-        let colorBottom = UIColor(red: 0.023, green: 0.569, blue: 0.910, alpha: 1.0).CGColor
+        let colorTop = UIColor(red: 93/355, green: 170/255, blue: 183/355, alpha: 1.0).CGColor
+        let colorBottom = UIColor(red: 73/355, green: 150/255, blue: 163/355, alpha: 1.0).CGColor
         var backgroundGradient = CAGradientLayer()
         backgroundGradient.colors = [colorTop, colorBottom]
         backgroundGradient.locations = [0.0, 1.0]
         backgroundGradient.frame = view.frame
         self.view.layer.insertSublayer(backgroundGradient, atIndex: 0)
         
-        /* Configure header text label */
+        // Configure header text label
         headerTextLabel.font = UIFont(name: "AvenirNext-Medium", size: 24.0)
         headerTextLabel.textColor = UIColor.whiteColor()
         
-        /* Configure email textfield */
-        let emailTextFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0);
+        // Configure email textfield
+        let emailTextFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0)
         let emailTextFieldPaddingView = UIView(frame: emailTextFieldPaddingViewFrame)
+        
+        // Configure username textfield
         usernameTextField.leftView = emailTextFieldPaddingView
         usernameTextField.leftViewMode = .Always
         usernameTextField.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
-        usernameTextField.backgroundColor = UIColor(red: 0.702, green: 0.863, blue: 0.929, alpha:1.0)
-        usernameTextField.textColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
+        usernameTextField.backgroundColor = UIColor(red: 143/355, green: 210/255, blue: 233/355, alpha:1.0)
+        usernameTextField.textColor = forestGreen
         usernameTextField.attributedPlaceholder = NSAttributedString(string: usernameTextField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         usernameTextField.tintColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
         
-        /* Configure password textfield */
+        // Configure password textfield
         let passwordTextFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0);
         let passwordTextFieldPaddingView = UIView(frame: passwordTextFieldPaddingViewFrame)
         passwordTextField.leftView = passwordTextFieldPaddingView
         passwordTextField.leftViewMode = .Always
         passwordTextField.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
-        passwordTextField.backgroundColor = UIColor(red: 0.702, green: 0.863, blue: 0.929, alpha:1.0)
-        passwordTextField.textColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
+        passwordTextField.backgroundColor = UIColor(red: 143/355, green: 210/255, blue: 233/355, alpha:1.0)
+        passwordTextField.textColor = forestGreen
         passwordTextField.attributedPlaceholder = NSAttributedString(string: passwordTextField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         passwordTextField.tintColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
         
         // Configure login button
         loginButton.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 17.0)
-        //loginButton.highlightedBackingColor = UIColor(red: 0.0, green: 0.298, blue: 0.686, alpha:1.0)
-        //loginButton.backingColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
-        loginButton.backgroundColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
+        loginButton.backgroundColor = forestGreen
         loginButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         
-        /* Configure tap recognizer */
+        // Configure tap recognizer
         tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
         tapRecognizer?.numberOfTapsRequired = 1
     }
