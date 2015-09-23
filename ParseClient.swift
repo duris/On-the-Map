@@ -37,7 +37,7 @@ class ParseClient : NSObject {
     /
     */
     func getStudentLocations(completionHandler: (success: Bool, errorString: String!) -> Void) {
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100&order=-createdAt")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100&order=-updatedAt")!)
         request.addValue(ParseClient.AppID, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(ParseClient.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         let task = session.dataTaskWithRequest(request) { data, response, error in
@@ -99,7 +99,9 @@ class ParseClient : NSObject {
         request.addValue(ParseClient.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { /* Handle error */ return
+            if error != nil {
+                completionHandler(success: false, errorString: error.localizedDescription)
+                return
             }
             
             if let studentData = NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers, error: nil) as? NSDictionary {

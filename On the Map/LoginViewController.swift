@@ -27,7 +27,7 @@ class LoginViewController: SharedViewController {
         loginActivityIdicator.hidden = true
         
         // Configure User Interface
-        self.configureLoginUI()
+        configureLoginUI()
         
     }
 

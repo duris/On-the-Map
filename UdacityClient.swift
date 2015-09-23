@@ -101,7 +101,7 @@ class UdacityClient : NSObject {
         }
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                // Handle error…
+                
                 return
             } else {
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))

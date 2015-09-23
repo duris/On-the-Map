@@ -110,7 +110,9 @@ class SharedViewController: UIViewController {
     //Open information posting view or alert if a location already exists
     func pinButtonTouch() {
         ParseClient.sharedInstance().queryStudentLocation(UdacityClient.User.uniqueKey) { (success, errorString) in
-            if success {
+            if errorString != nil {
+                self.alertError(errorString, viewController: self)
+            } else if success {
                 self.existingLocationAlert(self)
             } else {
                 self.openInformationPostingView()
