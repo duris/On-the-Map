@@ -42,11 +42,11 @@ class ParseClient : NSObject {
         request.addValue(ParseClient.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandler(success: false, errorString: "\(error.localizedDescription)")
+                completionHandler(success: false, errorString: "\(error!.localizedDescription)")
                 return
             }
-            var parsingError: NSError? = nil
-            let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+            //var parsingError: NSError? = nil
+            let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as! NSDictionary
 
             if let results = parsedResult["results"] as? [[String : AnyObject]] {
                 ParseClient.studentLocations = StudentInformation.studentsFromResults(results)
@@ -74,10 +74,10 @@ class ParseClient : NSObject {
         request.HTTPBody = "{\"uniqueKey\": \"\(student.uniqueKey)\", \"firstName\": \"\(student.firstName)\", \"lastName\": \"\(student.lastName)\",\"mapString\": \"\(student.mapString)\", \"mediaURL\": \"\(student.mediaURL)\",\"latitude\": \(student.latitude), \"longitude\": \(student.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandler(success: false, errorString: "\(error.localizedDescription)")
+                completionHandler(success: false, errorString: "\(error!.localizedDescription)")
                 return
             } else {
-                println(NSString(data: data, encoding: NSUTF8StringEncoding))
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
                 completionHandler(success: true, errorString: nil)                
             }
         }
@@ -100,11 +100,11 @@ class ParseClient : NSObject {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandler(success: false, errorString: error.localizedDescription)
+                completionHandler(success: false, errorString: error!.localizedDescription)
                 return
             }
             
-            if let studentData = NSJSONSerialization.JSONObjectWithData(data, options: .MutableContainers, error: nil) as? NSDictionary {
+            if let studentData = (try? NSJSONSerialization.JSONObjectWithData(data!, options: .MutableContainers)) as? NSDictionary {
                 if let results = studentData["results"] as? [NSDictionary] {
                     for item in results{
                         if let objectId = item["objectId"] as? String! {
@@ -140,10 +140,10 @@ class ParseClient : NSObject {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandler(success: false, errorString: error.localizedDescription)
+                completionHandler(success: false, errorString: error!.localizedDescription)
                 return
             } else {
-                println(NSString(data: data, encoding: NSUTF8StringEncoding))
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
                 completionHandler(success: true, errorString: nil)
             }
         }

@@ -44,7 +44,7 @@ class LoginViewController: SharedViewController {
     @IBAction func loginButtonTouch() {
         //Start loading
         toggleLoading(true, indicator: loginActivityIdicator, view: view)
-        UdacityClient.sharedInstance().authenticateWithCredentials(usernameTextField.text, password: passwordTextField.text, hostViewController: self) { (success, errorString) in
+        UdacityClient.sharedInstance().authenticateWithCredentials(usernameTextField.text!, password: passwordTextField.text!, hostViewController: self) { (success, errorString) in
             if success {
                 self.completeLogin()
             } else {
@@ -107,7 +107,7 @@ class LoginViewController: SharedViewController {
         self.view.backgroundColor = UIColor.clearColor()
         let colorTop = UIColor(red: 93/355, green: 170/255, blue: 183/355, alpha: 1.0).CGColor
         let colorBottom = UIColor(red: 73/355, green: 150/255, blue: 163/355, alpha: 1.0).CGColor
-        var backgroundGradient = CAGradientLayer()
+        let backgroundGradient = CAGradientLayer()
         backgroundGradient.colors = [colorTop, colorBottom]
         backgroundGradient.locations = [0.0, 1.0]
         backgroundGradient.frame = view.frame

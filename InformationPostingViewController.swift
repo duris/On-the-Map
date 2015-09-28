@@ -53,20 +53,23 @@ class InformationPostingViewController: SharedViewController, UITextFieldDelegat
         //If submit title is present attempt to submit post
         //Else if find on map title is present attemp to geocode the string
         if submitButton.titleLabel?.text == "Submit" {
-            if mediaURL != defaultMediaText && !mediaURL.isEmpty{
-                if let url = NSURL(string: mediaURL){
+            if mediaURL != defaultMediaText && mediaURL!.isEmpty{
+                if let url = NSURL(string: mediaURL!){
                     if UIApplication.sharedApplication().canOpenURL(url){
                         
                         //Prepare a StudentInformation object
-                        var student = StudentInformation(dictionary: [
+                        var dict : [String:AnyObject]
+
+                        dict = [
                             "uniqueKey": UdacityClient.User.uniqueKey,
                             "firstName": UdacityClient.User.firstName,
                             "lastName": UdacityClient.User.lastName,
                             "latitude": location.coordinate.latitude,
                             "longitude": location.coordinate.longitude,
-                            "mediaURL": mediaURL,
-                            "mapString": mapString
-                            ])
+                            "mediaURL": mediaURL as String!,
+                            "mapString": mapString as String!
+                        ]
+                        let student = StudentInformation(dictionary: dict)
                         
 
                         //If a location does not exist yet create one or else ask to overwrite
@@ -96,11 +99,22 @@ class InformationPostingViewController: SharedViewController, UITextFieldDelegat
                 }
             }
         } else{
-            if mapString != defaultText && !mapString.isEmpty {
+            if mapString != defaultText && !mapString!.isEmpty {
                 
                 //Geocode the address and start loading
                 toggleLoading(true, indicator: geoActivityIndicator, view: view)
-                geocoder.geocodeAddressString(mapString, completionHandler: geocodingCompleted)
+                geocoder.geocodeAddressString(mapString!) { (placemarks, error) -> Void in
+                    if error != nil {
+                        self.toggleLoading(false, indicator: self.geoActivityIndicator, view: self.view)
+                        if error!.localizedDescription.rangeOfString("2") != nil{
+                            self.alertError("The operation could not be completed.", viewController: self)
+                        } else {
+                            self.alertError("The location you entered could not be found.", viewController: self)
+                        }
+                    } else {
+                        self.geocodingCompleted(placemarks)
+                    }
+                }
             }
         }
 
@@ -115,7 +129,7 @@ class InformationPostingViewController: SharedViewController, UITextFieldDelegat
     
     func textFieldDidEndEditing(textField: UITextField) {
         //If the textField is empty set to default
-        if textField.text.isEmpty {
+        if textField.text!.isEmpty {
             locationTextFeild.text = defaultText
             mediaURLTextFeild.text = defaultMediaText
         }
@@ -146,29 +160,22 @@ class InformationPostingViewController: SharedViewController, UITextFieldDelegat
     }
 
 
-    func geocodingCompleted(placemarks: [AnyObject]!, error: NSError!) {
+    func geocodingCompleted(placemarks:[CLPlacemark]?) {
         //Stop loading
         toggleLoading(false, indicator: geoActivityIndicator, view: view)
         
-        if let placemark = placemarks?[0] as? CLPlacemark {
+        if let placemark = placemarks?[0] as CLPlacemark! {
             
             //Save the location
-            let latitude = placemark.location.coordinate.latitude
-            let longitude = placemark.location.coordinate.longitude
+            let latitude = placemark.location!.coordinate.latitude
+            let longitude = placemark.location!.coordinate.longitude
             location = CLLocation(latitude: latitude, longitude: longitude)
             
             //Go to next step
             changeToMediaStep(location)
-            
-        } else {
-            if error.localizedDescription.rangeOfString("2") != nil{
-                alertError("The operation could not be completed.", viewController: self)
-            } else {
-                alertError("The location you entered could not be found.", viewController: self)
-            }
         }
     }
-    
+
     /* Center mapView to a location */
     func centerMapOnLocation(location: CLLocation) {
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
@@ -198,7 +205,7 @@ class InformationPostingViewController: SharedViewController, UITextFieldDelegat
         
         //Create a pin from the geocoded locaiton and zoom to it
         let coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
-        var userPin = StudentPin(title: "\(UdacityClient.User.firstName) \(UdacityClient.User.lastName)", subtitle: "", coordinate: coordinate)
+        let userPin = StudentPin(title: "\(UdacityClient.User.firstName) \(UdacityClient.User.lastName)", subtitle: "", coordinate: coordinate)
         mapView.addAnnotation(userPin)        
         centerMapOnLocation(location)
     }

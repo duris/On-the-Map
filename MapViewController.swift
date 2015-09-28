@@ -55,23 +55,23 @@ class MapViewController: SharedViewController, MKMapViewDelegate {
     func refresh() {
         //Remove all annotations
         for annotation in mapView.annotations{
-            self.mapView.removeAnnotation(annotation as! MKAnnotation)
+            self.mapView.removeAnnotation(annotation )
         }
         //Reload the data
         loadStudentPins()
     }
 
     
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!,
-        calloutAccessoryControlTapped control: UIControl!) {
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView,
+        calloutAccessoryControlTapped control: UIControl) {
             //Open students mediaURL when accessory is tapped
             let pin = view.annotation as! StudentPin
             let url = pin.subtitle
-            handleURL(url)
+            handleURL(url!)
     }
     
     //Concepts from RayWenderlich.com
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         let annotation = MKPointAnnotation()
         let identifier = "pin"
         var view: MKPinAnnotationView
@@ -84,7 +84,7 @@ class MapViewController: SharedViewController, MKMapViewDelegate {
             view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             view.canShowCallout = true
             view.calloutOffset = CGPoint(x: -9, y: 0)
-            view.rightCalloutAccessoryView = UIButton.buttonWithType(.DetailDisclosure) as! UIView
+            view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure) as UIView
         }
         return view
     }

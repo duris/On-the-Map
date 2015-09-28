@@ -120,7 +120,6 @@ class SharedViewController: UIViewController {
         }
     }
     
-    
     //Open a new InformationPostingViewController
     func openInformationPostingView(){
         let controller = self.storyboard!.instantiateViewControllerWithIdentifier("InformationPostingViewController") as! InformationPostingViewController
@@ -143,7 +142,7 @@ class SharedViewController: UIViewController {
     
     /* Check for a valid URL */
     func handleURL(url: String) {
-        print(url)
+        print(url, terminator: "")
         if url.rangeOfString("http") != nil{
             openLink(NSURL(string: url)!)
         } else {
@@ -157,7 +156,7 @@ class SharedViewController: UIViewController {
         }
     }
     
-    /* Attemp to open a url */
+    /* Attemp to open url */
     func openLink(link:NSURL){
         if UIApplication.sharedApplication().canOpenURL(link) {
             UIApplication.sharedApplication().openURL(link)

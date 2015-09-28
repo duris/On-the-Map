@@ -46,13 +46,13 @@ class UdacityClient : NSObject {
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil  {
-                completionHandler(success: false, errorString: "\(error.localizedDescription)")
+                completionHandler(success: false, errorString: "\(error!.localizedDescription)")
                 return
             } else {
-                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5 ))
-                println(NSString(data: newData, encoding: NSUTF8StringEncoding))
-                var parsingError: NSError? = nil
-                let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+                let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5 ))
+                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+                //var parsingError: NSError? = nil
+                let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments)) as! NSDictionary
                 
                 if let account = parsedResult["account"] as? [String:AnyObject],
                     let registered = account["registered"] as? Bool,
@@ -93,19 +93,19 @@ class UdacityClient : NSObject {
         request.HTTPMethod = "DELETE"
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        for cookie in sharedCookieStorage.cookies as! [NSHTTPCookie] {
+        for cookie in (sharedCookieStorage.cookies as [NSHTTPCookie]!) {
             if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
         }
         if let xsrfCookie = xsrfCookie {
-            request.setValue(xsrfCookie.value!, forHTTPHeaderField: "X-XSRF-TOKEN")
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
                 
                 return
             } else {
-                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-                println(NSString(data: newData, encoding: NSUTF8StringEncoding))
+                let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
             }
         }
         task.resume()
@@ -123,12 +123,12 @@ class UdacityClient : NSObject {
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/\(key)")!)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandler(success: false, errorString: "\(error.localizedDescription)")
+                completionHandler(success: false, errorString: "\(error!.localizedDescription)")
                 return
             }
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            var parsingError: NSError? = nil
-            let parsedResult = NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments, error: &parsingError) as! NSDictionary
+            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+            //var parsingError: NSError? = nil
+            let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(newData, options: NSJSONReadingOptions.AllowFragments)) as! NSDictionary
         
             if let user = parsedResult["user"] as? NSDictionary {
                 if let firstName = user["first_name"] as? String,

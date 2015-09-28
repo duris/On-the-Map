@@ -34,7 +34,7 @@ class TableViewController: SharedViewController, UITableViewDataSource, UITableV
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath:
-            indexPath) as! UITableViewCell
+            indexPath) 
         
         //Configure the cell
         cell.textLabel?.text = "\(students[indexPath.row].firstName) \(students[indexPath.row].lastName)"
