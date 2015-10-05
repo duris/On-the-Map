@@ -53,10 +53,9 @@ class InformationPostingViewController: SharedViewController, UITextFieldDelegat
         //If submit title is present attempt to submit post
         //Else if find on map title is present attemp to geocode the string
         if submitButton.titleLabel?.text == "Submit" {
-            if mediaURL != defaultMediaText && mediaURL!.isEmpty{
+            if mediaURL != defaultMediaText{
                 if let url = NSURL(string: mediaURL!){
                     if UIApplication.sharedApplication().canOpenURL(url){
-                        
                         //Prepare a StudentInformation object
                         var dict : [String:AnyObject]
 
