@@ -17,6 +17,7 @@ class SharedViewController: UIViewController {
     let forestGreen = UIColor(red: 43/355, green: 110/255, blue: 123/355, alpha:1.0)
     
     
+    
     /*
     //
     //  Toggle the activity indicator and adjust the views appearance
@@ -55,14 +56,7 @@ class SharedViewController: UIViewController {
     }
     
     
-    
-    //----------------------------//
-    //  Note to Udacity Reviewer
-    /*
-        Some of following could be placed into another shared view controller as it's not being used by all of the controllers. I was not sure if it was a neccessary abstraction. Any input? Thanks, Ross
-    */
-    //
-    //----------------------------//
+
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.view.endEditing(true)
